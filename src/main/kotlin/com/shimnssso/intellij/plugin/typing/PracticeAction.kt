@@ -1,4 +1,4 @@
-package com.github.mechurak.typingpracticeintellijplugin
+package com.shimnssso.intellij.plugin.typing
 
 import com.intellij.diff.DiffContentFactory
 import com.intellij.diff.DiffDialogHints
@@ -6,6 +6,7 @@ import com.intellij.diff.DiffManager
 import com.intellij.diff.DiffRequestFactory
 import com.intellij.diff.actions.impl.MutableDiffRequestChain
 import com.intellij.diff.contents.DiffContent
+import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnAction
@@ -33,7 +34,7 @@ class PracticeAction : AnAction() {
         val file = File(tempPath)
         try {
             val success = file.createNewFile()
-            System.out.println("tempPath: $tempPath, success: $success")
+            println("tempPath: $tempPath, success: $success")
         } catch (e: IOException) {
             e.printStackTrace()
             return
@@ -44,7 +45,9 @@ class PracticeAction : AnAction() {
             System.err.println("Failed to get VirtualFile from $file")
             return
         }
-        Notifications.Bus.notify(com.intellij.notification.Notification("TypingPractice", "TypingPractice", "ActionPerformed!!!", NotificationType.INFORMATION))
+        Notifications.Bus.notify(
+            Notification("TypingPractice", "TypingPractice", "ActionPerformed!!!", NotificationType.INFORMATION)
+        )
 
         // Reference: https://github.com/JetBrains/intellij-community/blob/1febe662a8f9a86621279d30bc61ae6cacae5ef5/platform/diff-impl/src/com/intellij/diff/actions/BaseShowDiffAction.java#L69
         val project: Project? = e.project
@@ -54,19 +57,21 @@ class PracticeAction : AnAction() {
         val contest1: DiffContent = contentFactory.create(project, vf)
         val contest2: DiffContent = contentFactory.create(project, vf2)
 
-        val chain: MutableDiffRequestChain = MutableDiffRequestChain(contest1, contest2)
+        val chain = MutableDiffRequestChain(contest1, contest2)
         chain.windowTitle = requestFactory.getTitle(vf, vf2)
         chain.title1 = requestFactory.getContentTitle(vf)
         chain.title2 = requestFactory.getContentTitle(vf2)
 
-        val runnable: Runnable = Runnable {
+        val runnable = Runnable {
             MyTypedHandler.status = MyTypedHandler.Status.DISABLED
             val success = file.delete()
             println("closed!!, delete: $success")
         }
-        val consumer: Consumer<WindowWrapper> = Consumer<WindowWrapper> { it -> UIUtil.runWhenWindowClosed(it.window, runnable) }
+        val consumer = Consumer<WindowWrapper> {
+            UIUtil.runWhenWindowClosed(it.window, runnable)
+        }
 
-        val hint: DiffDialogHints = DiffDialogHints(null, null, consumer)
+        val hint = DiffDialogHints(null, null, consumer)
         DiffManager.getInstance().showDiff(project, chain, hint)
         MyTypedHandler.status = MyTypedHandler.Status.ENABLED
     }

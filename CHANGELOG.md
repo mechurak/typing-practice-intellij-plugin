@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# typing-practice-intellij-plugin Changelog
+# Typing Practice Changelog
 
 ## [Unreleased]
 ### Added
