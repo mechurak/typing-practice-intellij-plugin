@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.github.mechurak.typingpracticeintellijplugin</id>
-    <name>typing-practice-intellij-plugin</name>
+    <name>Typing Practice</name>
     <vendor>mechurak</vendor>
 
     <!-- Product and plugin compatibility requirements -->
@@ -8,12 +8,23 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.mechurak.typingpracticeintellijplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.mechurak.typingpracticeintellijplugin.services.MyProjectService"/>
+        <applicationService
+                serviceImplementation="com.github.mechurak.typingpracticeintellijplugin.services.MyApplicationService"/>
+        <projectService
+                serviceImplementation="com.github.mechurak.typingpracticeintellijplugin.services.MyProjectService"/>
+
+        <typedHandler implementation="com.github.mechurak.typingpracticeintellijplugin.MyTypedHandler"/>
     </extensions>
 
     <projectListeners>
         <listener class="com.github.mechurak.typingpracticeintellijplugin.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </projectListeners>
+
+    <actions>
+        <action id="TypingPractice" class="com.github.mechurak.typingpracticeintellijplugin.PracticeAction"
+                text="Practice">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
